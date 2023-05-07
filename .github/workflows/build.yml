@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+name: Build
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - run: echo "nvmrc=$(cat .nvmrc)" >> $GITHUB_ENV
+        id: nvmrc
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "${{ env.nvmrc }}"
+
+      #
+      # - name: Setup tmate session
+      #   if: ${{ always() }}
+      #   timeout-minutes: 30 # Run `sudo shutdown -h now` to terminate the session
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   uses: mxschmitt/action-tmate@v3
